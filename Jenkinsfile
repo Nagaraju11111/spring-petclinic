@@ -1,10 +1,12 @@
 pipeline {
-    agent { label 'REDHAT-NODE && NODE' }
+    agent { label 'REDHAT-NODE' }
     stages{
-        stage('vcs') {
+        stage('git') {
             steps {
-                git url: 'https://github.com/Nagaraju11111/spring-petclinic.git'
+                git branch: 'ppm2', 
+                url: 'https://github.com/Nagaraju11111/spring-petclinic.git'
             }
+        }
         stage('build')  {
             steps {
                 sh 'mvn package'
@@ -12,11 +14,14 @@ pipeline {
         }
         stage('test results') {
             steps {
-                '**/target/*.jar'
-                '**/sure-fire reports/*.xml'
+               junit testResults: '**/surefire-reports/*.xml'
+        }
+            }
+        stage('archive artifacts') {
+            steps {
+                archiveArtifacts '**/target/*.jar'
             }
         }   
+            
         }
     }
-
-}
