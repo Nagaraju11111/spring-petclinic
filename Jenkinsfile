@@ -1,4 +1,4 @@
-pipeline {`
+pipeline {
     agent { label 'NODE' }
     triggers { cron('H 23 * * *') }
     stages {
