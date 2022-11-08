@@ -4,7 +4,7 @@ pipeline {
     stages {
        stage('vcs') {
         steps {
-            git url: 'git@github.com:Nagaraju11111/spring-petclinic.git',
+            git url: 'https://github.com/Nagaraju11111/spring-petclinic.git',
                 branch: 'ad'    
         }
        }
@@ -13,8 +13,8 @@ pipeline {
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "JFROG-AC",
-                    releaseRepo: 'default-libs-release-local',
-                    snapshotRepo: 'default-libs-snapshot-local'
+                    releaseRepo: 'naveen-libs-release-local',
+                    snapshotRepo: 'naveen-libs-snapshot-local'
                 )
            }
         }
@@ -23,7 +23,7 @@ pipeline {
                 rtMavenRun (
                     tool: 'MAVEN-3.6.3', // Tool name from Jenkins configuration
                     pom: 'pom.xml',
-                    goals: 'clean package',
+                    goals: 'install',
                     deployerId: "MAVEN_DEPLOYER"
                 )
             }
@@ -35,6 +35,12 @@ pipeline {
                 )
             }
         }
-       
+         stage ('playbook') {
+          steps {
+            sh 'ansible-playbook -i hosts playbook.yaml'
+           } 
+        }
+        
+                 
     }
 }

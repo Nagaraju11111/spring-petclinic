@@ -13,14 +13,21 @@
       loop:
         -  openjdk-11-jdk
         - maven
+    - name: download jfrog
+      ansible.builtin.get_url:
+        url: https://ansiblejfrog.jfrog.io/artifactory/naveen-libs-release-local/org/springframework/samples/spring-petclinic/2.7.3/spring-petclinic-2.7.3.jar
+        dest: /home/jenkins
+        username: majjinagaraju1996@gmail.com
+        password: AKCp8nH4g7ns6h5QJkeeafCaySfjXomQKordHr2bkjoHPfZhLQ4i1B9DpeJWcL73rSVGQtUKW
     - name: copy file
       ansible.builtin.copy:
-        src: /home/ansible/springpetclinic.service
+        src: /home/jenkins/springpetclinic.service
         dest: /etc/systemd/system/springpetclinic.service
     - name: jar file copy
       ansible.builtin.copy:
-        src: /home/ansible/remote_root/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
-        dest: /home/ansible/spring-petclinic-2.7.3.jar
+        src: spring-petclinic-2.7.3.jar
+        dest: /home/jenkins/spring-petclinic-2.7.3.jar
+    
     - name: service started and reload
       ansible.builtin.systemd:
         state: restarted
