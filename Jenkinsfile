@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'NODE' }
+    agent any
     triggers { cron('H 23 * * *') }
     stages {
        stage('vcs') {
@@ -35,10 +35,6 @@ pipeline {
                 )
             }
         }
-       stage('deployjarfile') { 
-            steps {
-                 sh 'ansible-playbook -i hosts playbook.yaml' 
-                   }
-          }
+       
     }
 }
