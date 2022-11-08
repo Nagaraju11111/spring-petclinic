@@ -32,4 +32,4 @@
       ansible.builtin.systemd:
         state: restarted
         daemon_reload: yes
-        name: springpetclinic
+        name: springpetclinic.service
