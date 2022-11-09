@@ -21,13 +21,8 @@
         password: AKCp8nH4g7ns6h5QJkeeafCaySfjXomQKordHr2bkjoHPfZhLQ4i1B9DpeJWcL73rSVGQtUKW
     - name: copy file
       ansible.builtin.copy:
-        src: /home/jenkins/springpetclinic.service
+        src: /home/jenkins
         dest: /etc/systemd/system/springpetclinic.service
-    - name: jar file copy
-      ansible.builtin.copy:
-        src: spring-petclinic-2.7.3.jar
-        dest: /home/jenkins/spring-petclinic-2.7.3.jar
-    
     - name: service started and reload
       ansible.builtin.systemd:
         state: restarted
