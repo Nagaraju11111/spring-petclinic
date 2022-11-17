@@ -8,12 +8,12 @@ pool:
 stages:
 - stage: build
   jobs:
-  - job: build package
+  - job: buildpackage
     steps:
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'clean install'
+        goals: 'package'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         jdkVersionOption: '1.11'
@@ -21,9 +21,9 @@ stages:
         javaHomeOption: 'JDKVersion'
         jdkDirectory: '/usr/lib/jvm/java-11-openjdk-amd64'
 
-- stage: Archive artifacts
+- stage: Archiveartifacts
   jobs:
-  - job: Archive artifacts
+  - job: Archiveartifacts
     steps:
     - task: ArchiveFiles@2
       inputs:
@@ -34,9 +34,9 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
         replaceExistingArchive: true 
 
-- stage: publish Junit test testResults
+- stage: JunittesttestResults
   jobs:
-  - job: publish Junit test testResults
+  - job: testResults
     steps:
     - task: PublishTestResults@2
       inputs:
