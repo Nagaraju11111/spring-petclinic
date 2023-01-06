@@ -2,7 +2,7 @@ pipeline {
     agent { label 'node1' }
     triggers { pollSCM '* * * * *'  }
     parameters {  
-                 choice(name: 'maven_goal', defaultValue: ['clean install','package'], description: 'build the code')
+                 choice(name: 'maven_goal', choices: ['install','package'], description: 'build the code')
                  choice(name: 'branch_to_build', choices: ['main', 'dev', 'ppm'], description: 'choose build')
                 }
     
