@@ -9,10 +9,7 @@ pipeline {
     stages {
         stage ('vcs') {
             steps {
-                mail subject: "Build started for spc JOB $env.JOB_NAME",
-                      body: "Build started for spc JOB $env.JOB_NAME with build id $env.BUILD_ID",
-                      to: "devops@gmail.com"
-                git branch: 'main', url: "https://github.com/spring-projects/spring-petclinic.git"
+                git branch: 'dev', url: "https://github.com/spring-projects/spring-petclinic.git"
             }
         }
         stage("build & SonarQube analysis") {
@@ -57,21 +54,6 @@ pipeline {
                     serverId: "jfrog-id"
                 )
             }
-        }
-    }
-    post {
-        always {
-            mail subject: "Build completed for spc JOB $env.JOB_NAME",
-                 body: "Build completed for spc JOB $env.JOB_NAME \n click here: $env.JOB_URL",
-                 to: "devops@gmail.com"
-        }
-        failure {
-            mail subject: "Build failed for spc JOB $env.JOB_NAME",
-                 body: "Build failed for spc JOB $env.JOB_NAME with build id $env.BUILD_ID",
-                 to: "devops@gmail.com"
-        }
-        success {
-            junit testResults: '**/target/surefire-reports/*.xml'
         }
     }
 }
