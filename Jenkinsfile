@@ -19,40 +19,17 @@ pipeline {
               }
             }
           }
-          stage("Quality Gate") {
-            steps {
-              timeout(time: 30, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
-              }
+        stage ('jfrog') {
+             environment { 
+                AN_ACCESS_KEY = credentials('jfrogrep_cred') 
             }
-          }
-
-        stage ('Artifactory configuration') {
-            steps {
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "JFROG_PRACTICE",
-                    releaseRepo: "naveen-libs-release-local",
-                    snapshotRepo: "naveen-libs-snapshot-local"
-                )
-            }
-        }
         
-        stage ('Exec Maven') {
-            steps {
-                rtMavenRun (
-                    tool: "MAVEN-3.6.3", // Tool name from Jenkins configuration
-                    pom: "pom.xml",
-                    goals: "${params.maven_goal}",
-                    deployerId: "MAVEN_DEPLOYER"
-                )
-            }
         }
-        stage ('Publish build info') {
+        stage ('docker') {
             steps {
-                rtPublishBuildInfo (
-                    serverId: "jfrog-id"
-                )
+              sh 'docker image build -t spc:1.0 .'
+              sh 'docker image tag spc:1.0 pdpk8s.jfrog.io/dockerimages/spc:1.0'
+              sh 'docker image push pdpk8s.jfrog.io/dockerimages/spc:1.0 '
             }
         }
     }
