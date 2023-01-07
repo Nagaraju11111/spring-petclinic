@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'node1' }
-    triggers { pollSCM '* * * * *'  }
+    triggers { pollSCM '* * * * *' }
     parameters {  
                  choice(name: 'maven_goal', choices: ['install','package'], description: 'build the code')
                  choice(name: 'branch_to_build', choices: ['main', 'dev', 'ppm'], description: 'choose build')
@@ -19,13 +19,10 @@ pipeline {
               }
             }
           }
-        stage ('jfrog') {
+        stage ('jfrog and docker') {
              environment { 
                 AN_ACCESS_KEY = credentials('jfrogrep_cred') 
             }
-        
-        }
-        stage ('docker') {
             steps {
               sh 'docker image build -t spc:1.0 .'
               sh 'docker image tag spc:1.0 pdpk8s.jfrog.io/dockerimages/spc:1.0'
