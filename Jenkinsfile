@@ -16,6 +16,7 @@ pipeline {
             steps {
               withSonarQubeEnv('sonarqube-id') {
                 sh "mvn ${params.maven_goal} sonar:sonar"
+                 sh 'docker image build -t spc:1.0 .'
               }
             }
           }
@@ -24,7 +25,6 @@ pipeline {
                 AN_ACCESS_KEY = credentials('jfrogrep_cred') 
             }
             steps {
-              sh 'docker image build -t spc:1.0 .'
               sh 'docker image tag spc:1.0 pdpk8s.jfrog.io/dockerimages/spc:1.0'
               sh 'docker image push pdpk8s.jfrog.io/dockerimages/spc:1.0 '
             }
