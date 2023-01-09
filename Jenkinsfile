@@ -53,8 +53,8 @@ pipeline {
                 )
             }
         }
-        stage ('docker')
-        agent { label 'node2' } {
+        stage ('docker') {
+        agent { label 'node2' } 
               environment { 
                 AN_ACCESS_KEY = credentials('jfrogrep_cred')
            }
