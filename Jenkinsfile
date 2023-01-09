@@ -5,7 +5,6 @@ pipeline {
                  choice(name: 'maven_goal', choices: ['install','package','clean install'], description: 'build the code')
                  choice(name: 'branch_to_build', choices: ['main', 'dev', 'ppm'], description: 'choose build')
                 }
-    
     stages {
         stage ('vcs') {
             steps {
@@ -53,6 +52,17 @@ pipeline {
                     serverId: "jfrog-id"
                 )
             }
+        }
+        stage ('docker')
+        agent { label 'node2' } {
+              environment { 
+                AN_ACCESS_KEY = credentials('jfrogrep_cred')
+           }
+           steps {
+              sh 'docker image build -t spcdev:1.0 .'
+              sh 'docker image tag spcdev:1.0 pdpk8s.jfrog.io/dockerimages/spcdev:1.0'
+              sh 'docker image push pdpk8s.jfrog.io/dockerimages/spcdev:1.0 '
+            }  
         }
     }
 }
