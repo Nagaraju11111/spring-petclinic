@@ -64,7 +64,7 @@ pipeline {
            }
            steps {
              //dir("{$WORKSPACE}/spring-petclinic"){
-              dir("{/home/devops/node/workspace/"){
+              dir("/home/devops/node/workspace/"){
                       unstash 'tostage'
                       }
               sh 'docker image build -t spcdev:1.0 .'
