@@ -65,6 +65,7 @@ pipeline {
            steps {
              //dir("{$WORKSPACE}/spring-petclinic"){
               unstash 'tostage'
+              sh'ls'
               sh 'docker image build -t spcdev:1.0 .'
               sh 'docker image tag spcdev:1.0 pdpk8s.jfrog.io/dockerimages/spcdev:1.0'
               sh 'docker image push pdpk8s.jfrog.io/dockerimages/spcdev:1.0 '
