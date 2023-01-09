@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'node1' }
-    triggers { pollSCM '* * * * *' }
+    triggers { pollSCM '* * * * *'  }
     parameters {  
                  choice(name: 'maven_goal', choices: ['install','package'], description: 'build the code')
                  choice(name: 'branch_to_build', choices: ['main', 'dev', 'ppm'], description: 'choose build')
@@ -16,17 +16,44 @@ pipeline {
             steps {
               withSonarQubeEnv('sonarqube-id') {
                 sh "mvn ${params.maven_goal} sonar:sonar"
-                 sh 'docker image build -t spc:1.0 .'
               }
             }
           }
-        stage ('jfrog and docker') {
-             environment { 
-                AN_ACCESS_KEY = credentials('jfrogrep_cred') 
-            }
+          stage("Quality Gate") {
             steps {
-              sh 'docker image tag spc:1.0 pdpk8s.jfrog.io/dockerimages/spc:1.0'
-              sh 'docker image push pdpk8s.jfrog.io/dockerimages/spc:1.0 '
+              timeout(time: 30, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+
+        stage ('Artifactory configuration') {
+            steps {
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "jfrog-id",
+                    releaseRepo: "naveen-libs-release-local",
+                    snapshotRepo: "naveen-libs-snapshot-local"
+                )
+            }
+        }
+        /*
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: "MAVEN-3.6.3", // Tool name from Jenkins configuration
+                    pom: "pom.xml",
+                    goals: "${params.maven_goal}",
+                    deployerId: "MAVEN_DEPLOYER"
+                )
+            }
+        }
+        */
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "jfrog-id"
+                )
             }
         }
     }
