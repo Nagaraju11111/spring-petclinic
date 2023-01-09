@@ -44,7 +44,8 @@ pipeline {
                     goals: "${params.maven_goal}",
                     deployerId: "MAVEN_DEPLOYER"
                 )
-                stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
+                stash includes: "/home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
+               // stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
                 ///home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
             }
             
@@ -62,7 +63,8 @@ pipeline {
                 AN_ACCESS_KEY = credentials('jfrogrep_cred')
            }
            steps {
-             dir("{$WORKSPACE}/spring-petclinic/"){
+             //dir("{$WORKSPACE}/spring-petclinic"){
+              dir("{/home/devops/node/workspace/"){
                       unstash 'tostage'
                       }
               sh 'docker image build -t spcdev:1.0 .'
