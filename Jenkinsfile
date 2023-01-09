@@ -45,7 +45,7 @@ pipeline {
                     deployerId: "MAVEN_DEPLOYER"
                 )
             }
-            stash includes: "{$worksoace}/target/*.jar" name: 'tostage'
+            stash includes: "{$worksoace}/target/*.jar" , name: 'tostage'
         }
         stage ('Publish build info') {
             steps {
