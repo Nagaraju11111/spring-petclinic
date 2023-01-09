@@ -44,11 +44,7 @@ pipeline {
                     goals: "${params.maven_goal}",
                     deployerId: "MAVEN_DEPLOYER"
                 )
-                sh'pwd'
-                stash includes: '/spring-petclinic/target/*' , name: 'tostage'
-               // stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
-                ///home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
-            }
+                }
             
         }
         stage ('Publish build info') {
@@ -56,6 +52,10 @@ pipeline {
                 rtPublishBuildInfo (
                     serverId: "jfrog-id"
                 )
+                sh'pwd'
+                stash includes: '/home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar' , name: 'tostage'
+               // stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
+                ///home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
             }
         }
         stage ('docker') {
@@ -65,7 +65,7 @@ pipeline {
            }
            steps {
              //dir("{$WORKSPACE}/spring-petclinic"){
-              dir("{/"){
+              dir("{/home/devops/node/workspace/"){
                       unstash 'tostage'
                       }
               sh 'docker image build -t spcdev:1.0 .'
