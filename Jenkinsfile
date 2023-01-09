@@ -45,7 +45,7 @@ pipeline {
                     deployerId: "MAVEN_DEPLOYER"
                 )
                 sh'pwd'
-                stash includes: '/home/devops/node/workspace/spring-petclinic/target/*' , name: 'tostage'
+                stash includes: '/spring-petclinic/target/*' , name: 'tostage'
                // stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
                 ///home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
             }
@@ -65,7 +65,7 @@ pipeline {
            }
            steps {
              //dir("{$WORKSPACE}/spring-petclinic"){
-              dir("{/home/devops/node/workspace/"){
+              dir("{/"){
                       unstash 'tostage'
                       }
               sh 'docker image build -t spcdev:1.0 .'
