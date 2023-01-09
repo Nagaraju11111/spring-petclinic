@@ -45,6 +45,7 @@ pipeline {
                     deployerId: "MAVEN_DEPLOYER"
                 )
             }
+            stash includes: "{$worksoace}/target/*.jar" name: 'tostage'
         }
         stage ('Publish build info') {
             steps {
@@ -59,6 +60,9 @@ pipeline {
                 AN_ACCESS_KEY = credentials('jfrogrep_cred')
            }
            steps {
+             dir("{$workspace}/target/"){
+                      unstash 'tostage'
+                      }
               sh 'docker image build -t spcdev:1.0 .'
               sh 'docker image tag spcdev:1.0 pdpk8s.jfrog.io/dockerimages/spcdev:1.0'
               sh 'docker image push pdpk8s.jfrog.io/dockerimages/spcdev:1.0 '
