@@ -44,8 +44,9 @@ pipeline {
                     goals: "${params.maven_goal}",
                     deployerId: "MAVEN_DEPLOYER"
                 )
+                stash includes: "{$worksoace}/target/*.jar" , name: 'tostage'
             }
-            stash includes: "{$worksoace}/target/*.jar" , name: 'tostage'
+            
         }
         stage ('Publish build info') {
             steps {
