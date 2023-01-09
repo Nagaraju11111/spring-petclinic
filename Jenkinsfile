@@ -52,10 +52,7 @@ pipeline {
                 rtPublishBuildInfo (
                     serverId: "jfrog-id"
                 )
-                stash includes: '/home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar' , name: 'tostage'
-              // stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
-                ///home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
-            }
+                 }
         }
         stage ('docker') {
         agent { label 'node2' } 
@@ -63,9 +60,6 @@ pipeline {
                 AN_ACCESS_KEY = credentials('jfrogrep_cred')
            }
            steps {
-             //dir("{$WORKSPACE}/spring-petclinic"){
-              unstash 'tostage'
-              sh'ls'
               sh 'docker image build -t spcdev:1.0 .'
               sh 'docker image tag spcdev:1.0 pdpk8s.jfrog.io/dockerimages/spcdev:1.0'
               sh 'docker image push pdpk8s.jfrog.io/dockerimages/spcdev:1.0 '
