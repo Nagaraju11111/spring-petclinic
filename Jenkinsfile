@@ -52,7 +52,7 @@ pipeline {
                 rtPublishBuildInfo (
                     serverId: "jfrog-id"
                 )
-                stash includes: '/target/spring-petclinic-2.7.3.jar' , name: 'tostage'
+                stash includes: '/home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar' , name: 'tostage'
               // stash includes: "{$WORKSPACE}/spring-petclinic/target/spring-petclinic-2.7.3.jar" , name: 'tostage'
                 ///home/devops/node/workspace/spring-petclinic/target/spring-petclinic-2.7.3.jar
             }
