@@ -1,8 +1,8 @@
 pipeline {
     agent { label 'node1' }
-    triggers { pollSCM '* * * * *'  }
+    triggers { pollSCM '* * * * *' }
     parameters {  
-                 choice(name: 'maven_goal', choices: ['install','package'], description: 'build the code')
+                 choice(name: 'maven_goal', choices: ['install','package','clean install'], description: 'build the code')
                  choice(name: 'branch_to_build', choices: ['main', 'dev', 'ppm'], description: 'choose build')
                 }
     
@@ -37,7 +37,6 @@ pipeline {
                 )
             }
         }
-        /*
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
@@ -48,7 +47,6 @@ pipeline {
                 )
             }
         }
-        */
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
