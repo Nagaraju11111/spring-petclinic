@@ -3,34 +3,31 @@ pipeline {
     triggers { pollSCM "* * * * *" }
     parameters {  
             choice(name: "image_Type", choices: ["base", "test", "infra"], description: "choose build")
-            string(name: "imagename", default: "ubuntu:latest", description: "ex: ubuntu:latest or full image path")
+            string(name: "imagename", defaultValue: "ubuntu:latest", description: "ex: ubuntu:latest or full image path")
             
                 }
     stages {
-        stage ("vcs") {
-            steps {
-                git branch: "dev", url: "https://github.com/spring-projects/spring-petclinic.git"
-            }
-        }
         stage ("docker") {
             environment { 
                 AN_ACCESS_KEY = credentials("jfrogrep_cred")
               }
-            scripts {
+              steps {
+                 script {
                     def repositoryName = "dockerimages"
-                    if (${params.image_Type} != "none" ){
+                    if ("${params.image_Type}" != "none" ){
                         sh """
                         docker image pull ${imagename}
-                        docker image tag ${imagename} pdpk8s.jfrog.io/dockerimages/${image_Type}-${imagename}
-                        docker image push pdpk8s.jfrog.io/dockerimages/${image_Type}/${imagename}
+                        docker image tag ${imagename} pdpk8s.jfrog.io/${repositoryName}/${image_Type}-${imagename}
+                        docker image push pdpk8s.jfrog.io/${repositoryName}/${image_Type}-${imagename}
                         """
                     }else {
                         sh """
                          docker image pull ${imagename} 
-                         docker image tag ${imagename} pdpk8s.jfrog.io/dockerimages/test-${imagename}
-                         docker image push pdpk8s.jfrog.io/dockerimages/test-${imagename}"""
+                         docker image tag ${imagename} pdpk8s.jfrog.io/${repositoryName}/test-${imagename}
+                         docker image push pdpk8s.jfrog.io/${repositoryName}/test-${imagename}"""
                     }
                 }  
-           }
+              }
+            }
         }
 }
