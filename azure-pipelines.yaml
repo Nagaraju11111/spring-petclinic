@@ -2,6 +2,7 @@
 trigger:
 - main 
 - dev 
+- ad 
 pool: devops
 stages:
 - stage: build
