@@ -4,6 +4,8 @@ trigger:
 - dev 
 - ad 
 pool: devops
+variables:
+  JAVA_HOME_11_x64: '/usr/lib/jvm/java-11-openjdk-amd64/'
 stages:
 - stage: build
   jobs:
