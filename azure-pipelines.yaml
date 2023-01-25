@@ -1,10 +1,7 @@
 ---
 trigger:
-- dev
-
-pool: 
-- Devops
-
+- main 
+pool: devops
 stages:
 - stage: build
   jobs:
@@ -13,32 +10,19 @@ stages:
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'package'
+        goals: 'install'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
         javaHomeOption: 'JDKVersion'
-        jdkDirectory: '/usr/lib/jvm/java-11-openjdk-amd64'
-
-- stage: Archiveartifacts
-  jobs:
-  - job: Archiveartifacts
-    steps:
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: '$(Build.BinariesDirectory)' 
-        includeRootFolder: true 
-        archiveType: 'zip' 
-        tarCompression: 'none' 
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
-        replaceExistingArchive: true 
-
-- stage: JunittesttestResults
-  jobs:
-  - job: testResults
-    steps:
+        jdkVersionOption: '1.11'
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
-        testResultsFiles: '**/TEST-*.xml'
+        testResultsFiles: '**/target/surefire-reports/TEST-*.xml'    
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: 'target/*.jar' 
+        includeRootFolder: false
+        archiveFile: '$(Build.ArtifactStagingDirectory)/*.jar' 
+        replaceExistingArchive: false
+
