@@ -1,6 +1,7 @@
 ---
 trigger:
 - main 
+- dev 
 pool: devops
 stages:
 - stage: build
