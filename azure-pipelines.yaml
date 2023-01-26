@@ -1,40 +1,47 @@
 ---
-trigger:
-- main 
-- dev 
-- ad 
-pool: devops
-variables:
-  JAVA_HOME_11_x64: '/usr/lib/jvm/java-11-openjdk-amd64/'
-stages:
-- stage: build
-  jobs:
-  - job: buildpackage
-    steps:
-    - task: Maven@3
-      inputs:
-        mavenPomFile: 'pom.xml'
-        goals: 'install'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit'
-        testResultsFiles: '**/target/surefire-reports/TEST-*.xml'    
-    - task: ArchiveFiles@2
-      inputs:
-        rootFolderOrFile: 'target/*.jar' 
-        includeRootFolder: false
-        archiveFile: '$(Build.ArtifactStagingDirectory)/*.jar' 
-        replaceExistingArchive: false
-    - task: JFrogArtifactoryDeploy@2
-      inputs:
-        artifactoryService: 'jfrog_id'
-        targetRepo: 'devops'
-        includeEnvVars: true
-        buildName: '$(Build.BuildNumber)'
-        buildNumber: '$(Build.BuildId)'
-        deployPattern: 'target/*.jar'
-        deployBuildInfo: true
+  trigger:
+  - main 
+  - dev 
+  - ad 
+  pool: devops
+  variables:
+    JAVA_HOME_11_x64: '/usr/lib/jvm/java-11-openjdk-amd64/'
+  stages:
+  - stage: build
+    jobs:
+    - job: buildpackage
+      steps:
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'install'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: '**/target/surefire-reports/TEST-*.xml'    
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: 'target/*.jar' 
+          includeRootFolder: false
+          archiveFile: '$(Build.ArtifactStagingDirectory)/*.jar' 
+          replaceExistingArchive: false
+      - task: JFrogGenericArtifacts@1
+        inputs:
+          command: 'Upload'
+          connection: 'jfrog_id'
+          specSource: 'taskConfiguration'
+          fileSpec:
+            files:
+              - pattern: '**/target/*.jar'
+                target: 'devops'
+          collectBuildInfo: true
+          buildName: '$(Build.DefinitionName)'
+          buildNumber: '$(Build.BuildNumber)'
+          projectKey: 'proj'
+          includeEnvVars: true
+          failNoOp: true
+          
