@@ -29,4 +29,12 @@ stages:
         includeRootFolder: false
         archiveFile: '$(Build.ArtifactStagingDirectory)/*.jar' 
         replaceExistingArchive: false
-
+    - task: JFrogArtifactoryDeploy@2
+      inputs:
+        artifactoryService: 'jfrog_id'
+        targetRepo: 'devops'
+        includeEnvVars: true
+        buildName: '$(Build.BuildNumber)'
+        buildNumber: '$(Build.BuildId)'
+        deployPattern: 'target/*.jar'
+        deployBuildInfo: true
