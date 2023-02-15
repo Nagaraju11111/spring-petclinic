@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: spc-ser
+spec:
+  minReadySeconds: 10
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spc
+  template:
+    metadata:
+      name: spc-ser
+      labels:
+        app: spc 
+        ver: v1
+    spec:
+      containers:
+        - name: spcapp 
+          image: pdpdevops.azurecr.io/spc:1.0
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+        
+                        

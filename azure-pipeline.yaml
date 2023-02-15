@@ -1,0 +1,33 @@
+---
+pool: k8s
+
+trigger: 
+  - ppm 
+
+stages:
+  - stage: build 
+    jobs: 
+      - job: dockerimagebuild
+        steps: 
+          - task: Docker@2 
+            inputs: 
+              containerRegistry: acr_id 
+              repository: pdpdevops.azurecr.io/spc 
+              command: 'buildAndPush' 
+              Dockerfile: Dockerfile 
+              tags: '$(Build.BuildId)' 
+  - stage: deploy 
+    jobs: 
+      - job: deployimage 
+        dependsOn: dockerimagebuild
+        condition: Succeed();
+        steps: 
+          - task: Kubernetes@1 
+            inputs: 
+              connectionType: Azure Resource Manager 
+              command: apply 
+              useConfigurationFile: true 
+              configurationType: configuration 
+              configuration: deployments/spcapp.yaml             
+
+        
