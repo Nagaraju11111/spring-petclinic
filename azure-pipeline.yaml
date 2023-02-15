@@ -12,22 +12,23 @@ stages:
           - task: Docker@2 
             inputs: 
               containerRegistry: acr_id 
-              repository: pdpdevops.azurecr.io/spc 
+              repository: spc 
               command: 'buildAndPush' 
               Dockerfile: Dockerfile 
               tags: '$(Build.BuildId)' 
   - stage: deploy 
+    dependsOn: build
+    condition: succeeded()
     jobs: 
       - job: deployimage 
-        dependsOn: dockerimagebuild
-        condition: Succeed();
         steps: 
           - task: Kubernetes@1 
             inputs: 
               connectionType: Azure Resource Manager 
+              azureSubscriptionEndpoint: acrm_id 
+              azureResourceGroup: myResourceGroup
+              kubernetesCluster: myAKSCluster 
               command: apply 
               useConfigurationFile: true 
               configurationType: configuration 
-              configuration: deployments/spcapp.yaml             
-
-        
+              configuration: deployments/spcapp.yaml    

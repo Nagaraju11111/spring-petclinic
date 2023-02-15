@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: spcapp 
-          image: pdpdevops.azurecr.io/spc:1.0
+          image: pdpdevops.azurecr.io/spc:95
           ports:
             - containerPort: 8080
               protocol: TCP
