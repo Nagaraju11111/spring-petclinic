@@ -1,0 +1,37 @@
+---
+parameters: 
+  - name: goal 
+    type: string 
+    default: package 
+    values: 
+      - package 
+      - install 
+      - deploy 
+      - clean 
+  - name: javaversion  
+    type: string 
+    default: '1.11' 
+    values: 
+      - '1.11' 
+      - '1.8' 
+  - name: javadirectory 
+    type: string 
+    default: /usr/lib/jvm/java-11-openjdk-amd64/ 
+    values: 
+      - /usr/lib/jvm/java-11-openjdk-amd64/ 
+      - /usr/lib/jvm/java-8-openjdk-amd64/     
+       
+stages: 
+  - stage: build 
+    jobs: 
+      - job: mavenbuild 
+        steps: 
+          - task: Maven@3 
+            inputs:
+              mavenPomFile: pom.xml 
+              goals: "${{ parameters.goal }}" 
+              publishJUnitResults: true 
+              testResultsFiles: '**/surefire-reports/TEST-*.xml' 
+              javaHomeOption: path
+              jdkVersionOption: "${{ parameters.javaversion }}" 
+              jdkDirectory: "${{ parameters.javadirectory }}"

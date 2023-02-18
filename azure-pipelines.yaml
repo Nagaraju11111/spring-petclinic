@@ -1,0 +1,14 @@
+---
+pool: k8s 
+
+trigger: 
+  - main 
+
+extends:
+  template: ./azuredevops/sampletemplate.yaml 
+  parameters:
+    goal: 'install' 
+    jdkVersionOption: '1.11' 
+    jdkDirectory: /usr/lib/jvm/java-11-openjdk-amd64/
+
+    
