@@ -1,10 +1,22 @@
 ---
-pool: gopi
-
-trigger: 
-  - ppm2
-
-steps:
-  - template: azuredevops/maventemplate.yaml@azuredevopsparamteres 
+  pool: gopi
+    
+  trigger: 
+      - ppm2
+      
+  resources:
+    repositories: 
+      - repository: azuredevopsparamteres 
+        endpoint: github_id
+        ref: refs/heads/main
+        name: Nagaraju11111/learninggit
+        type: github    
+    
+  stages:
+    - template: azuredevops/maventemplate.yaml@azuredevopsparamteres 
+      parameters:
+        goal: 'package' 
+        javaversion: '1.11' 
+        javadirectory: /usr/lib/jvm/java-11-openjdk-amd64/
 
     
