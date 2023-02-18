@@ -1,14 +1,10 @@
 ---
-pool: k8s 
+pool: gopi
 
 trigger: 
-  - main 
+  - ppm2
 
-extends:
-  template: ./azuredevops/sampletemplate.yaml 
-  parameters:
-    goal: 'install' 
-    jdkVersionOption: '1.11' 
-    jdkDirectory: /usr/lib/jvm/java-11-openjdk-amd64/
+steps:
+  - template: azuredevops/maventemplate.yaml@azuredevopsparamteres 
 
     
