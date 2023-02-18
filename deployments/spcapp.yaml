@@ -21,6 +21,9 @@ spec:
           image: pdpdevops.azurecr.io/spc:95
           ports:
             - containerPort: 8080
-              protocol: TCP
+              protocol: TCP 
+      imagePullSecrets: 
+        - name: naveen 
+                
         
                         
